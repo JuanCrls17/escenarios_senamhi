@@ -97,11 +97,17 @@ logo_senamhi = logo_b64("logo_senamhi.png", "PNG", height=80)
 logo_minam   = logo_b64("logo_minam.jpg",   "JPEG", height=80)
 
 # =========================================================
-# CSS (standalone)
+# CSS + JS de Leaflet embebidos desde disco (sin CDN)
 # =========================================================
 css_path = os.path.join(ASSETS_DIR, "style_standalone.css")
 with open(css_path, "r", encoding="utf-8") as f:
     CSS = f.read()
+
+with open(os.path.join(ASSETS_DIR, "leaflet.css"), "r", encoding="utf-8") as f:
+    LEAFLET_CSS = f.read()
+
+with open(os.path.join(ASSETS_DIR, "leaflet.js"), "r", encoding="utf-8") as f:
+    LEAFLET_JS = f.read()
 
 # Ajustes para que funcione dentro del iframe de Streamlit.
 # El iframe tiene altura fija; reemplazamos 100vh por 100% anclado al body.
@@ -502,19 +508,23 @@ window.addEventListener("message", (e) => {
 // ─── Inicialización ───────────────────────────────────────
 initControls();
 
-// Leaflet dentro de un iframe necesita invalidateSize después de que
-// el contenedor tenga dimensiones reales. Se usa setTimeout como
-// patrón estándar para este caso.
+// Leaflet en iframe: invalidateSize + try/catch para garantizar
+// que hideLoader() siempre se llama aunque falle algo.
 setTimeout(() => {
-  map.invalidateSize();
-  if (state.imcActive) {
-    renderImcLayer();
-  } else {
-    renderClimateLayer();
+  try {
+    map.invalidateSize();
+    if (state.imcActive) {
+      renderImcLayer();
+    } else {
+      renderClimateLayer();
+    }
+    renderRefLayer();
+  } catch(err) {
+    console.error("Error al renderizar capas:", err);
+  } finally {
+    hideLoader();
   }
-  renderRefLayer();
-  hideLoader();
-}, 300);
+}, 400);
 """
 
 # =========================================================
@@ -522,6 +532,8 @@ setTimeout(() => {
 # =========================================================
 def build_html(
     css: str,
+    leaflet_css: str,
+    leaflet_js: str,
     app_js: str,
     climate_json: str,
     imc_json: str,
@@ -545,10 +557,10 @@ def build_html(
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>{leaflet_css}</style>
   <style>{css}</style>
 </head>
 <body>
@@ -708,7 +720,7 @@ def build_html(
     <div class="footer-right">Escenarios CMIP6 · Resolución 5 km · Período 2036–2065</div>
   </footer>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>{leaflet_js}</script>
   <script>
     // ── Datos inyectados por Python ──────────────────────
     const CLIMATE_DATA   = {climate_json};
@@ -749,6 +761,8 @@ if "ref_layer" in qp: st.session_state.ref_layer = qp["ref_layer"]
 # =========================================================
 html_content = build_html(
     css=CSS,
+    leaflet_css=LEAFLET_CSS,
+    leaflet_js=LEAFLET_JS,
     app_js=APP_JS,
     climate_json=climate_json,
     imc_json=imc_json,
