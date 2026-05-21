@@ -240,8 +240,8 @@ async function loadClimateLayer() {
       style: feat => ({
         fillColor: getClimateColor(feat.properties.valor, state.variable),
         fillOpacity: 0.85,
-        color: "#666",
-        weight: 0.4,
+        color: "#555",
+        weight: 0.3,
       }),
       onEachFeature: (feat, layer) => {
         layer.on({
@@ -264,6 +264,7 @@ async function loadClimateLayer() {
         });
       },
     }).addTo(map);
+    if (refGeoLayer) refGeoLayer.bringToFront();
     buildClimateLegend(state.variable);
   } catch (err) {
     console.warn("Capa climática no disponible:", err.message);
@@ -312,6 +313,7 @@ async function loadImcLayer() {
         });
       },
     }).addTo(map);
+    if (refGeoLayer) refGeoLayer.bringToFront();
     buildImcLegend();
   } catch (err) {
     console.warn("Capa IMC no disponible:", err.message);
@@ -330,12 +332,13 @@ async function loadRefLayer(key) {
     const data = await fetchGeoJSON(refFilename(key));
     refGeoLayer = L.geoJSON(data, {
       style: {
-        color: "#000",
-        weight: 0.9,
+        color: "#1a2a4e",
+        weight: 1.4,
         fillOpacity: 0,
         interactive: false,
       },
     }).addTo(map);
+    refGeoLayer.bringToFront();
   } catch (err) {
     console.warn("Capa de referencia no disponible:", err.message);
   }
