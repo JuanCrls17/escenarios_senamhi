@@ -103,10 +103,35 @@ css_path = os.path.join(ASSETS_DIR, "style_standalone.css")
 with open(css_path, "r", encoding="utf-8") as f:
     CSS = f.read()
 
-# Ajustes para que funcione dentro del iframe de Streamlit
+# Ajustes para que funcione dentro del iframe de Streamlit.
+# El iframe tiene altura fija; reemplazamos 100vh por 100% anclado al body.
 CSS += """
-html, body { height: 100% !important; overflow: hidden !important; }
-.layout    { height: calc(100vh - var(--navbar-h) - var(--footer-h)) !important; }
+html, body {
+  height: 100% !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.layout {
+  position: absolute !important;
+  top: var(--navbar-h) !important;
+  bottom: var(--footer-h) !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: auto !important;
+}
+.map-container {
+  position: relative !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+}
+#map {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
 """
 
 # =========================================================
@@ -464,13 +489,17 @@ window.addEventListener("message", (e) => {
 
 // ─── Inicialización ───────────────────────────────────────
 initControls();
-if (state.imcActive) {
-  renderImcLayer();
-} else {
-  renderClimateLayer();
-}
-renderRefLayer();
-hideLoader();
+
+map.whenReady(() => {
+  map.invalidateSize();
+  if (state.imcActive) {
+    renderImcLayer();
+  } else {
+    renderClimateLayer();
+  }
+  renderRefLayer();
+  hideLoader();
+});
 """
 
 # =========================================================
@@ -727,4 +756,4 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.components.v1.html(html_content, height=800, scrolling=False)
+st.components.v1.html(html_content, height=920, scrolling=False)
