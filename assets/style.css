@@ -1,0 +1,204 @@
+/* =========================================================
+   SENAMHI PERÚ — Estilos globales
+   ========================================================= */
+
+/* --- Fuente institucional --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+}
+
+/* --- Ocultar elementos Streamlit no deseados --- */
+#MainMenu, footer, header { visibility: hidden; }
+.stDeployButton { display: none; }
+
+/* --- Fondo general --- */
+.stApp {
+    background-color: #f4f6f9;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+[data-testid="stSidebar"] {
+    background-color: #003087;
+    border-right: 3px solid #c8102e;
+}
+
+[data-testid="stSidebar"] * {
+    color: #ffffff !important;
+}
+
+[data-testid="stSidebar"] .stSelectbox label,
+[data-testid="stSidebar"] .stTextInput label,
+[data-testid="stSidebar"] .stCheckbox label,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* Selectboxes dentro del sidebar */
+[data-testid="stSidebar"] [data-baseweb="select"] > div {
+    background-color: rgba(255,255,255,0.12) !important;
+    border-color: rgba(255,255,255,0.3) !important;
+    color: #ffffff !important;
+    border-radius: 6px;
+}
+
+[data-testid="stSidebar"] [data-baseweb="select"] svg {
+    fill: #ffffff !important;
+}
+
+/* Inputs de texto */
+[data-testid="stSidebar"] input {
+    background-color: rgba(255,255,255,0.12) !important;
+    border-color: rgba(255,255,255,0.3) !important;
+    color: #ffffff !important;
+    border-radius: 6px;
+}
+
+/* Botón Buscar */
+[data-testid="stSidebar"] .stButton > button {
+    background-color: #c8102e;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    width: 100%;
+    padding: 8px 0;
+    transition: background-color 0.2s ease;
+}
+
+[data-testid="stSidebar"] .stButton > button:hover {
+    background-color: #a00d25;
+}
+
+/* Separadores */
+[data-testid="stSidebar"] hr {
+    border-color: rgba(255,255,255,0.2);
+}
+
+/* =========================================================
+   HEADER PRINCIPAL
+   ========================================================= */
+.senamhi-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: linear-gradient(135deg, #003087 0%, #00469b 100%);
+    padding: 14px 24px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,48,135,0.25);
+}
+
+.senamhi-header h1 {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+
+.senamhi-header .subtitle {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.78rem;
+    margin: 0;
+    margin-top: 2px;
+}
+
+.senamhi-header .badge {
+    background-color: #c8102e;
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   RADIO BUTTONS DE CAPAS DE REFERENCIA (en sidebar)
+   ========================================================= */
+.ref-layer-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.ref-layer-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.18);
+    transition: all 0.18s ease;
+    user-select: none;
+}
+
+.ref-layer-btn:hover {
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.45);
+}
+
+.ref-layer-btn.active {
+    background: rgba(200,16,46,0.25);
+    border-color: #c8102e;
+}
+
+.ref-layer-btn .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    flex-shrink: 0;
+    transition: all 0.18s ease;
+}
+
+.ref-layer-btn.active .dot {
+    background: #c8102e;
+    border-color: #c8102e;
+    box-shadow: 0 0 0 3px rgba(200,16,46,0.3);
+}
+
+.ref-layer-btn span {
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.ref-layer-btn.none-btn .dot {
+    background: rgba(255,255,255,0.15);
+}
+
+/* =========================================================
+   CONTENEDOR DEL MAPA
+   ========================================================= */
+.map-wrapper {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    border: 1px solid #d0d7e3;
+}
+
+/* Quitar padding extra que Streamlit pone alrededor del iframe */
+.stIframe, iframe {
+    border-radius: 10px;
+}
+
+/* =========================================================
+   OCULTAR controles nativos de Leaflet (zoom +/-, atribución)
+   — se inyectan via CSS dentro del iframe desde map_controls.js
+   ========================================================= */
+.leaflet-control-zoom,
+.leaflet-control-attribution,
+.leaflet-control-layers {
+    display: none !important;
+}

@@ -1,0 +1,35 @@
+# ── Datos originales (pesados, solo van los simplificados) ──
+data/*.geojson
+data/r.sh
+data/layers/
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Entornos virtuales ──
+.env
+.venv
+env/
+venv/
+
+# ── Sistema operativo ──
+.DS_Store
+Thumbs.db
+*.Zone.Identifier
+
+# ── IDEs ──
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Logs y temporales ──
+*.log
+*.tmp
