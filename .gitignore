@@ -1,0 +1,7 @@
+data/*.geojson
+data/r.sh
+data/layers/
+__pycache__/
+*.py[cod]
+.DS_Store
+*.Zone.Identifier
