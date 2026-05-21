@@ -602,9 +602,20 @@ html, body {
   color: var(--azul);
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   border-bottom: 2px solid var(--rojo);
   padding-bottom: 5px;
+}
+
+.legend-ref-note {
+  font-size: 0.63rem;
+  color: #6b7a8d;
+  font-style: italic;
+  margin-bottom: 8px;
+  padding: 3px 6px;
+  background: #f0f4f8;
+  border-radius: 4px;
+  border-left: 2px solid #4a7ec0;
 }
 
 .legend-item {

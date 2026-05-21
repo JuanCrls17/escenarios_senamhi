@@ -188,7 +188,10 @@ function buildClimateLegend(variable) {
     </div>`;
   }).join("");
 
-  el.innerHTML = `<div class="legend-title">${title}</div>${items}`;
+  el.innerHTML = `
+    <div class="legend-title">${title}</div>
+    <div class="legend-ref-note">Cambio respecto a 1981–2010</div>
+    ${items}`;
 }
 
 function buildImcLegend() {
@@ -210,9 +213,7 @@ function buildImcLegend() {
 
   el.innerHTML = `
     <div class="legend-title">Índice Multipeligro Climático</div>
-    <div style="font-size:0.62rem; color:#6b7a8d; margin-bottom:8px; line-height:1.4; border-bottom:1px solid #e8e8e8; padding-bottom:6px;">
-      Índice compuesto que integra múltiples peligros climáticos proyectados para el período 2036–2065 respecto a 1981–2010.
-    </div>
+    <div class="legend-ref-note">Cambio respecto a 1981–2010</div>
     ${items}`;
 }
 
