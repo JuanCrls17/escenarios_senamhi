@@ -18,7 +18,7 @@
   --shadow-md:  0 4px 16px rgba(0,0,0,0.14);
   --radius:     5px;
   --sidebar-w:  280px;
-  --navbar-h:   80px;
+  --navbar-h:   88px;
   --footer-h:   36px;
 }
 
@@ -29,6 +29,44 @@ html, body {
   color: #1a2236;
   background: var(--gris-bg);
   overflow: hidden;
+}
+
+/* =========================================================
+   ANIMACIONES GLOBALES
+   ========================================================= */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-22px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+@keyframes navbarGlow {
+  0%, 100% { box-shadow: 0 2px 16px rgba(0,0,0,0.45), 0 0 0 rgba(74,126,192,0); }
+  50%       { box-shadow: 0 2px 24px rgba(0,0,0,0.55), 0 0 40px rgba(30,58,110,0.35); }
+}
+@keyframes titleReveal {
+  from { opacity: 0; transform: translateY(10px) skewX(-1deg); letter-spacing: 2px; }
+  to   { opacity: 1; transform: translateY(0)    skewX(0deg);  letter-spacing: 0.6px; }
+}
+@keyframes badgePop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.15); }
+  100% { transform: scale(1);   opacity: 1; }
+}
+@keyframes borderFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes sidebarItemIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 /* =========================================================
@@ -46,6 +84,18 @@ html, body {
   z-index: 1100;
   box-shadow: 0 2px 16px rgba(0,0,0,0.45);
   border-bottom: 2px solid rgba(200,16,46,0.8);
+  animation: fadeInDown 0.5s cubic-bezier(0.22,1,0.36,1) both, navbarGlow 6s ease-in-out 1s infinite;
+  overflow: hidden;
+}
+
+/* Brillo deslizante en la navbar */
+.navbar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; right: 0; bottom: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%);
+  animation: shimmer 4s ease-in-out 1s infinite;
+  pointer-events: none;
 }
 
 .navbar-brand {
@@ -89,7 +139,7 @@ html, body {
 .navbar-titles {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
   min-width: 0;
   flex: 1;
 }
@@ -97,15 +147,23 @@ html, body {
 .navbar-title {
   color: var(--blanco);
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.05rem;
+  font-size: 1.28rem;
   font-weight: 800;
   letter-spacing: 0.6px;
-  line-height: 1.2;
+  line-height: 1.15;
   text-transform: uppercase;
   white-space: normal;
   overflow: visible;
   text-overflow: unset;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5), 0 0 40px rgba(100,160,255,0.2);
+  animation: titleReveal 0.7s cubic-bezier(0.22,1,0.36,1) 0.25s both;
+  background: linear-gradient(90deg, #ffffff 0%, #c8deff 50%, #ffffff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: titleReveal 0.7s cubic-bezier(0.22,1,0.36,1) 0.25s both,
+             shimmer 6s linear 1.5s infinite;
 }
 
 .navbar-subtitle {
@@ -115,6 +173,7 @@ html, body {
   font-weight: 500;
   letter-spacing: 0.5px;
   white-space: nowrap;
+  animation: fadeInDown 0.5s ease 0.5s both;
 }
 
 .navbar-right {
@@ -124,15 +183,20 @@ html, body {
   flex-shrink: 0;
 }
 
+.navbar-logo  { animation: fadeInDown 0.5s ease 0.1s both; }
+.navbar-logo-minam { animation: fadeInDown 0.5s ease 0.2s both; }
+
 .navbar-badge {
-  background: var(--rojo);
+  background: linear-gradient(135deg, #c8102e, #e8304e);
   color: var(--blanco);
   font-size: 0.6rem;
   font-weight: 700;
-  padding: 3px 9px;
+  padding: 4px 10px;
   border-radius: 20px;
   letter-spacing: 0.8px;
   text-transform: uppercase;
+  animation: badgePop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.8s both;
+  box-shadow: 0 2px 8px rgba(200,16,46,0.4);
 }
 
 /* =========================================================
@@ -158,6 +222,7 @@ html, body {
   transition: transform 0.28s ease, width 0.28s ease;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.2) transparent;
+  animation: fadeInLeft 0.5s cubic-bezier(0.22,1,0.36,1) 0.15s both;
 }
 
 .sidebar::-webkit-scrollbar { width: 4px; }
@@ -175,7 +240,14 @@ html, body {
   margin-bottom: 18px;
   padding-bottom: 18px;
   border-bottom: 1px solid rgba(255,255,255,0.12);
+  animation: sidebarItemIn 0.45s ease both;
 }
+
+.sidebar-section:nth-child(1) { animation-delay: 0.25s; }
+.sidebar-section:nth-child(2) { animation-delay: 0.35s; }
+.sidebar-section:nth-child(3) { animation-delay: 0.45s; }
+.sidebar-section:nth-child(4) { animation-delay: 0.55s; }
+.sidebar-section:nth-child(5) { animation-delay: 0.65s; }
 
 .sidebar-section:last-child {
   border-bottom: none;
@@ -208,13 +280,15 @@ html, body {
   cursor: pointer;
   border: 1.5px solid rgba(255,255,255,0.15);
   background: rgba(255,255,255,0.06);
-  transition: all 0.16s ease;
+  transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
   user-select: none;
 }
 
 .radio-card:hover {
   background: rgba(255,255,255,0.14);
-  border-color: rgba(255,255,255,0.35);
+  border-color: rgba(255,255,255,0.4);
+  transform: translateX(3px);
+  box-shadow: -3px 0 0 #4a7ec0;
 }
 
 .radio-card.active {
@@ -279,6 +353,8 @@ html, body {
   background: rgba(255,255,255,0.16);
   border-color: rgba(255,255,255,0.4);
   color: var(--blanco);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .btn-season.active {
@@ -357,6 +433,17 @@ html, body {
 /* ══════════════════════════════════════════
    BUSCADOR FLOTANTE — diseño premium
    ══════════════════════════════════════════ */
+@keyframes msfEntrance {
+  0%   { opacity: 0; transform: translateY(-20px) scale(0.94); }
+  60%  { transform: translateY(3px) scale(1.01); }
+  100% { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes msfGlow {
+  0%, 100% { box-shadow: 0 8px 32px rgba(0,20,70,0.22), 0 2px 8px rgba(0,0,0,0.12); }
+  50%       { box-shadow: 0 12px 40px rgba(14,40,100,0.32), 0 2px 12px rgba(0,0,0,0.18), 0 0 0 2px rgba(74,126,192,0.15); }
+}
+
 .map-search-float {
   position: absolute;
   top: 16px;
@@ -369,33 +456,54 @@ html, body {
     0 2px 8px rgba(0,0,0,0.12),
     0 0 0 1px rgba(255,255,255,0.6) inset;
   overflow: hidden;
-  animation: msfEntrance 0.35s cubic-bezier(0.22,1,0.36,1) both;
+  animation: msfEntrance 0.6s cubic-bezier(0.22,1,0.36,1) 0.3s both,
+             msfGlow 5s ease-in-out 1.5s infinite;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-@keyframes msfEntrance {
-  from { opacity: 0; transform: translateY(-10px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0)     scale(1);    }
+.map-search-float:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 44px rgba(0,20,70,0.28), 0 3px 12px rgba(0,0,0,0.16);
 }
 
-/* Franja superior con gradiente */
+/* Franja superior con gradiente animado */
 .msf-topbar {
   background: linear-gradient(135deg, #0d1b3e 0%, #1e3a6e 55%, #2d5494 100%);
-  padding: 10px 14px 9px;
+  background-size: 200% 200%;
+  padding: 11px 14px 10px;
   display: flex;
   align-items: center;
   gap: 9px;
+  position: relative;
+  overflow: hidden;
+  animation: borderFlow 8s ease infinite;
+}
+
+.msf-topbar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; right: 0; bottom: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.07) 50%, transparent 65%);
+  animation: shimmer 3.5s ease-in-out 1s infinite;
+  pointer-events: none;
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 0   0   rgba(126,184,247,0); }
+  50%       { transform: scale(1.08); box-shadow: 0 0 0   6px rgba(126,184,247,0.25); }
 }
 
 .msf-topbar-icon {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   background: rgba(255,255,255,0.14);
-  border-radius: 6px;
+  border-radius: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 1px solid rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.22);
+  animation: iconPulse 3s ease-in-out infinite;
 }
 
 .msf-topbar-icon svg { color: #7eb8f7; }
@@ -493,6 +601,11 @@ html, body {
   scrollbar-color: #c8d4e0 transparent;
 }
 
+@keyframes suggestionSlide {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
 .place-suggestion-item {
   display: flex;
   align-items: flex-start;
@@ -500,9 +613,17 @@ html, body {
   padding: 10px 14px;
   cursor: pointer;
   border-bottom: 1px solid #f0f4fa;
-  transition: background 0.13s, padding-left 0.13s;
+  transition: background 0.15s, padding-left 0.18s cubic-bezier(0.22,1,0.36,1);
   position: relative;
+  animation: suggestionSlide 0.25s ease both;
 }
+
+.place-suggestion-item:nth-child(1) { animation-delay: 0.03s; }
+.place-suggestion-item:nth-child(2) { animation-delay: 0.08s; }
+.place-suggestion-item:nth-child(3) { animation-delay: 0.13s; }
+.place-suggestion-item:nth-child(4) { animation-delay: 0.18s; }
+.place-suggestion-item:nth-child(5) { animation-delay: 0.23s; }
+.place-suggestion-item:nth-child(6) { animation-delay: 0.28s; }
 
 .place-suggestion-item::before {
   content: '';
@@ -511,7 +632,7 @@ html, body {
   width: 3px;
   background: linear-gradient(180deg, #1e3a6e, #4a7ec0);
   opacity: 0;
-  transition: opacity 0.13s;
+  transition: opacity 0.15s;
 }
 
 .place-suggestion-item:hover { background: #f0f6ff; padding-left: 17px; }
