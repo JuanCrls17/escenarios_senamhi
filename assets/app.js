@@ -254,13 +254,11 @@ async function loadClimateLayer() {
             if (e.target !== selectedFeature) climateLayer.resetStyle(e.target);
           },
           click(e) {
-            // Quitar resaltado anterior
             if (selectedFeature && climateLayer) climateLayer.resetStyle(selectedFeature);
-            // Resaltar el nuevo
             selectedFeature = e.target;
-            e.target.setStyle({ weight: 2.5, color: "#1e5bb5", fillOpacity: 0.97,
-                                 dashArray: null });
+            e.target.setStyle({ weight: 2.5, color: "#1e5bb5", fillOpacity: 0.97, dashArray: null });
             e.target.bringToFront();
+            e.target.closeTooltip();
             showInfoPanel(feat.properties, state.variable, false);
           },
         });
@@ -308,6 +306,7 @@ async function loadImcLayer() {
             selectedFeature = e.target;
             e.target.setStyle({ weight: 2.5, color: "#1e5bb5", fillOpacity: 0.97 });
             e.target.bringToFront();
+            e.target.closeTooltip();
             showInfoPanel(feat.properties, null, true);
           },
         });
