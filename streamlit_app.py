@@ -106,31 +106,43 @@ with open(css_path, "r", encoding="utf-8") as f:
 # Ajustes para que funcione dentro del iframe de Streamlit.
 # El iframe tiene altura fija; reemplazamos 100vh por 100% anclado al body.
 CSS += """
+/* ── Overrides para funcionar dentro del iframe de Streamlit ── */
+*, *::before, *::after { box-sizing: border-box; }
 html, body {
   height: 100% !important;
-  width: 100% !important;
+  width:  100% !important;
   overflow: hidden !important;
   margin: 0 !important;
   padding: 0 !important;
 }
 .layout {
   position: absolute !important;
-  top: var(--navbar-h) !important;
-  bottom: var(--footer-h) !important;
-  left: 0 !important;
-  right: 0 !important;
+  top:    var(--navbar-h)  !important;
+  bottom: var(--footer-h)  !important;
+  left:   0 !important;
+  right:  0 !important;
+  display: flex !important;
   height: auto !important;
+}
+.sidebar {
+  flex-shrink: 0 !important;
+  height: 100% !important;
+  overflow-y: auto !important;
 }
 .map-container {
   position: relative !important;
-  flex: 1 !important;
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  height: 100% !important;
   overflow: hidden !important;
 }
 #map {
   position: absolute !important;
-  inset: 0 !important;
+  top: 0 !important; left: 0 !important;
+  right: 0 !important; bottom: 0 !important;
   width: 100% !important;
   height: 100% !important;
+  background: #e8eef4 !important;
 }
 """
 
@@ -490,7 +502,10 @@ window.addEventListener("message", (e) => {
 // ─── Inicialización ───────────────────────────────────────
 initControls();
 
-map.whenReady(() => {
+// Leaflet dentro de un iframe necesita invalidateSize después de que
+// el contenedor tenga dimensiones reales. Se usa setTimeout como
+// patrón estándar para este caso.
+setTimeout(() => {
   map.invalidateSize();
   if (state.imcActive) {
     renderImcLayer();
@@ -499,7 +514,7 @@ map.whenReady(() => {
   }
   renderRefLayer();
   hideLoader();
-});
+}, 300);
 """
 
 # =========================================================
