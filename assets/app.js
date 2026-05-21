@@ -413,10 +413,5 @@ document.getElementById("btnBuscar").addEventListener("click", () => {
     .bindTooltip(`${lat.toFixed(5)}, ${lon.toFixed(5)}`, { permanent: false });
 });
 
-// ─── Sidebar toggle ───────────────────────────────────────
-document.getElementById("sidebarToggle").addEventListener("click", () => {
-  document.getElementById("sidebar").classList.toggle("collapsed");
-});
-
 // ─── Carga inicial ────────────────────────────────────────
 loadClimateLayer();

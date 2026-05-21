@@ -57,7 +57,9 @@ html, body {
   height: 38px;
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1);
+  background: var(--blanco);
+  border-radius: 5px;
+  padding: 3px 6px;
 }
 
 .navbar-divider {
@@ -71,8 +73,9 @@ html, body {
   height: 34px;
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
+  background: var(--blanco);
+  border-radius: 5px;
+  padding: 3px 6px;
 }
 
 .navbar-titles {
@@ -146,29 +149,6 @@ html, body {
   min-width: 0;
 }
 
-/* Toggle button */
-.sidebar-toggle {
-  position: absolute;
-  top: calc(var(--navbar-h) + 10px);
-  left: calc(var(--sidebar-w) - 16px);
-  z-index: 1050;
-  width: 28px;
-  height: 28px;
-  background: var(--rojo);
-  color: var(--blanco);
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-sm);
-  transition: background 0.18s;
-}
-
-.sidebar-toggle:hover { background: var(--rojo-dark); }
 
 /* Secciones del sidebar */
 .sidebar-section {
