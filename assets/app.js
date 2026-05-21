@@ -27,8 +27,8 @@ const IMC_COLORS = {
 
 // ─── Estado de la aplicación ──────────────────────────────
 const state = {
-  variable: "pr",
-  estacion: "anual",
+  variable:  "pr",     // "pr" | "tasmax" | "tasmin" | "imc"
+  estacion:  "anual",
   imcActive: false,
   imcTipo:   "agricola",
   refLayer:  "ninguna",
@@ -211,7 +211,7 @@ function buildImcLegend() {
 // ─── Cargar/refrescar capa climática ─────────────────────
 async function loadClimateLayer() {
   if (climateLayer) { map.removeLayer(climateLayer); climateLayer = null; }
-  if (state.imcActive) return;
+  if (state.imcActive || state.variable === "imc") return;
 
   showLoader();
   try {
@@ -325,9 +325,31 @@ function setupRadioGroup(groupId, onSelect) {
   });
 }
 
+// ─── Bloquear / desbloquear botones de estación ───────────
+function setSeasonBlocked(blocked) {
+  const btns = document.querySelectorAll(".btn-season");
+  const msg  = document.getElementById("seasonBlockedMsg");
+  btns.forEach(btn => {
+    if (blocked && btn.dataset.value !== "anual") {
+      btn.classList.add("blocked");
+    } else {
+      btn.classList.remove("blocked");
+    }
+  });
+  if (msg) msg.style.display = blocked ? "block" : "none";
+
+  // Si IMC se activa y la estación actual no es anual → forzar anual
+  if (blocked && state.estacion !== "anual") {
+    btns.forEach(b => b.classList.remove("active"));
+    document.querySelector('.btn-season[data-value="anual"]').classList.add("active");
+    state.estacion = "anual";
+  }
+}
+
 // ─── Botones estación ─────────────────────────────────────
 document.querySelectorAll(".btn-season").forEach(btn => {
   btn.addEventListener("click", () => {
+    if (btn.classList.contains("blocked")) return;
     document.querySelectorAll(".btn-season").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     state.estacion = btn.dataset.value;
@@ -335,10 +357,22 @@ document.querySelectorAll(".btn-season").forEach(btn => {
   });
 });
 
-// ─── Variable climática ───────────────────────────────────
+// ─── Variable climática (incluye IMC como opción) ─────────
 setupRadioGroup("varGroup", value => {
-  state.variable = value;
-  loadClimateLayer();
+  const imcTypeGroup = document.getElementById("imcTypeGroup");
+  if (value === "imc") {
+    state.imcActive = true;
+    state.variable  = "imc";
+    imcTypeGroup.style.display = "flex";
+    setSeasonBlocked(true);
+    loadImcLayer();
+  } else {
+    state.imcActive = false;
+    state.variable  = value;
+    imcTypeGroup.style.display = "none";
+    setSeasonBlocked(false);
+    loadClimateLayer();
+  }
 });
 
 // ─── Capa de referencia (radio exclusivo) ─────────────────
@@ -347,16 +381,7 @@ setupRadioGroup("refLayerGroup", value => {
   loadRefLayer(value);
 });
 
-// ─── Toggle IMC ───────────────────────────────────────────
-const imcToggle    = document.getElementById("imcToggle");
-const imcTypeGroup = document.getElementById("imcTypeGroup");
-
-imcToggle.addEventListener("change", () => {
-  state.imcActive = imcToggle.checked;
-  imcTypeGroup.style.display = state.imcActive ? "flex" : "none";
-  loadImcLayer();
-});
-
+// ─── Tipo IMC ─────────────────────────────────────────────
 setupRadioGroup("imcTypeGroup", value => {
   state.imcTipo = value;
   if (state.imcActive) loadImcLayer();

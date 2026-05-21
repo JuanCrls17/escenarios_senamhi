@@ -278,6 +278,29 @@ html, body {
   font-weight: 700;
 }
 
+/* Botones de estación bloqueados (cuando IMC está activo) */
+.btn-season.blocked {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Card IMC dentro del varGroup */
+.radio-card.imc-card {
+  border-style: dashed;
+  border-color: rgba(255,255,255,0.25);
+}
+.radio-card.imc-card.active {
+  background: rgba(200,16,46,0.22);
+  border-color: var(--rojo);
+  border-style: solid;
+}
+
+/* Subgrupo de tipos IMC */
+.imc-subgroup {
+  flex-direction: column;
+}
+
 /* Toggle IMC */
 .toggle-switch {
   display: flex;

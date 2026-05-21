@@ -42,7 +42,7 @@
       <!-- Toggle sidebar (móvil) -->
       <button class="sidebar-toggle" id="sidebarToggle" title="Ocultar panel">&#9776;</button>
 
-      <!-- Sección: Variable climática -->
+      <!-- Sección: Variable climática + IMC -->
       <div class="sidebar-section">
         <div class="section-label">Variable climática</div>
         <div class="radio-group" id="varGroup">
@@ -67,30 +67,17 @@
               <span class="radio-desc">Cambio proyectado (°C)</span>
             </div>
           </label>
+          <!-- IMC como opción dentro del grupo de variables -->
+          <label class="radio-card imc-card" data-value="imc">
+            <span class="radio-dot"></span>
+            <div>
+              <span class="radio-title">Índice Multipeligro</span>
+              <span class="radio-desc">Solo disponible · Anual</span>
+            </div>
+          </label>
         </div>
-      </div>
-
-      <!-- Sección: Estación -->
-      <div class="sidebar-section">
-        <div class="section-label">Estación del año</div>
-        <div class="btn-group" id="seasonGroup">
-          <button class="btn-season active" data-value="anual">Anual</button>
-          <button class="btn-season" data-value="DEF">Verano</button>
-          <button class="btn-season" data-value="MAM">Otoño</button>
-          <button class="btn-season" data-value="JJA">Invierno</button>
-          <button class="btn-season" data-value="SON">Primavera</button>
-        </div>
-      </div>
-
-      <!-- Sección: Índice multipeligro -->
-      <div class="sidebar-section">
-        <div class="section-label">Índice Multipeligro Climático</div>
-        <label class="toggle-switch">
-          <input type="checkbox" id="imcToggle" />
-          <span class="toggle-slider"></span>
-          <span class="toggle-label">Activar IMC</span>
-        </label>
-        <div id="imcTypeGroup" class="radio-group" style="display:none; margin-top:10px;">
+        <!-- Subgrupo de tipo IMC, visible solo cuando IMC está activo -->
+        <div id="imcTypeGroup" class="radio-group imc-subgroup" style="display:none; margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.1);">
           <label class="radio-card active" data-value="agricola">
             <span class="radio-dot"></span>
             <div><span class="radio-title">Agricultura</span></div>
@@ -115,6 +102,21 @@
             <span class="radio-dot"></span>
             <div><span class="radio-title">Cultura</span></div>
           </label>
+        </div>
+      </div>
+
+      <!-- Sección: Estación -->
+      <div class="sidebar-section">
+        <div class="section-label">Estación del año</div>
+        <div class="btn-group" id="seasonGroup">
+          <button class="btn-season active" data-value="anual">Anual</button>
+          <button class="btn-season" data-value="DEF">Verano</button>
+          <button class="btn-season" data-value="MAM">Otoño</button>
+          <button class="btn-season" data-value="JJA">Invierno</button>
+          <button class="btn-season" data-value="SON">Primavera</button>
+        </div>
+        <div id="seasonBlockedMsg" style="display:none; margin-top:6px; font-size:0.68rem; color:rgba(255,255,255,0.45); font-style:italic;">
+          El IMC solo está disponible para el período Anual.
         </div>
       </div>
 
