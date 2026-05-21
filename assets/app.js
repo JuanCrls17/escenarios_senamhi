@@ -31,7 +31,7 @@ const state = {
   estacion:  "anual",
   imcActive: false,
   imcTipo:   "agricola",
-  refLayer:  "ninguna",
+  refLayer:  "departamentos",
 };
 
 // ─── Capas Leaflet activas ────────────────────────────────
@@ -403,19 +403,17 @@ function placeSearchMarker(lat, lon, label) {
 }
 
 // ─── Buscador de lugares (Nominatim) ─────────────────────
-const placeInput      = document.getElementById("placeInput");
-const placeSuggestions= document.getElementById("placeSuggestions");
-const placeClearBtn   = document.getElementById("placeClearBtn");
-let   searchTimer     = null;
+const placeInput       = document.getElementById("placeInput");
+const placeSuggestions = document.getElementById("placeSuggestions");
+const placeClearBtn    = document.getElementById("placeClearBtn");
+let   searchTimer      = null;
 
 function hideSuggestions() {
   placeSuggestions.innerHTML = "";
-  placeSuggestions.style.display = "none";
 }
 
 function showSuggestions(html) {
   placeSuggestions.innerHTML = html;
-  placeSuggestions.style.display = "block";
 }
 
 placeInput.addEventListener("input", () => {
@@ -482,7 +480,7 @@ placeClearBtn.addEventListener("click", () => {
 });
 
 document.addEventListener("click", e => {
-  if (!e.target.closest(".place-search-wrap")) hideSuggestions();
+  if (!e.target.closest(".map-search-float")) hideSuggestions();
 });
 
 // ─── Toggle panel coordenadas ─────────────────────────────
@@ -504,3 +502,4 @@ document.getElementById("btnBuscar").addEventListener("click", () => {
 
 // ─── Carga inicial ────────────────────────────────────────
 loadClimateLayer();
+loadRefLayer("departamentos");

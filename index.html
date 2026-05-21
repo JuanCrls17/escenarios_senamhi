@@ -96,11 +96,7 @@
       <div class="sidebar-section">
         <div class="section-label">Capa de referencia</div>
         <div class="radio-group" id="refLayerGroup">
-          <label class="radio-card active" data-value="ninguna">
-            <span class="radio-dot"></span>
-            <div><span class="radio-title">Ninguna</span></div>
-          </label>
-          <label class="radio-card" data-value="departamentos">
+          <label class="radio-card active" data-value="departamentos">
             <span class="radio-dot"></span>
             <div>
               <span class="radio-title">Departamentos</span>
@@ -124,26 +120,11 @@
         </div>
       </div>
 
-      <!-- Sección: Buscar lugar -->
+      <!-- Sección: Buscar coordenadas (colapsable) -->
       <div class="sidebar-section">
-        <div class="section-label">Buscar lugar de interés</div>
-        <div class="place-search-wrap">
-          <div class="place-search-input-row">
-            <svg class="place-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <input type="text" id="placeInput" class="place-search-input"
-              placeholder="Escribe un lugar, ciudad o distrito…"
-              autocomplete="off" />
-            <button class="place-clear-btn" id="placeClearBtn" title="Limpiar" style="display:none;">✕</button>
-          </div>
-          <div class="place-suggestions" id="placeSuggestions"></div>
-        </div>
-
-        <!-- Coordenadas: colapsable -->
         <div class="coord-toggle" id="coordToggle">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-          Usar coordenadas exactas
+          Buscar por coordenadas exactas
         </div>
         <div class="coord-panel" id="coordPanel" style="display:none;">
           <div class="coord-inputs">
@@ -176,6 +157,20 @@
 
     <!-- ========== MAPA ========== -->
     <main class="map-container">
+
+      <!-- Buscador flotante sobre el mapa -->
+      <div class="map-search-float" id="mapSearchFloat">
+        <div class="msf-header">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" id="placeInput" class="msf-input"
+            placeholder="Busca tu lugar de interés…"
+            autocomplete="off" />
+          <button class="msf-clear" id="placeClearBtn" title="Limpiar" style="display:none;">✕</button>
+        </div>
+        <div class="msf-suggestions" id="placeSuggestions"></div>
+      </div>
 
       <!-- Controles de zoom personalizados -->
       <div class="map-zoom-ctrl" id="zoomCtrl">
