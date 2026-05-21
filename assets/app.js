@@ -35,10 +35,11 @@ const state = {
 };
 
 // ─── Capas Leaflet activas ────────────────────────────────
-let climateLayer = null;
-let imcLayer     = null;
-let refGeoLayer  = null;
-let searchMarker = null;
+let climateLayer    = null;
+let imcLayer        = null;
+let refGeoLayer     = null;
+let searchMarker    = null;
+let selectedFeature = null;  // capa actualmente seleccionada (resaltada)
 
 // ─── Inicializar mapa ─────────────────────────────────────
 const map = L.map("map", {
@@ -163,6 +164,14 @@ function showInfoPanel(props, variable, isImc) {
     </div>`
   ).join("");
 
+  // Posicionar el panel debajo del buscador flotante
+  const floatBox = document.getElementById("mapSearchFloat");
+  if (floatBox) {
+    const floatRect    = floatBox.getBoundingClientRect();
+    const containerRect = document.querySelector(".map-container").getBoundingClientRect();
+    const topOffset    = floatRect.bottom - containerRect.top + 10;
+    panel.style.top    = topOffset + "px";
+  }
   panel.style.display = "block";
 }
 
@@ -220,6 +229,8 @@ function buildImcLegend() {
 // ─── Cargar/refrescar capa climática ─────────────────────
 async function loadClimateLayer() {
   if (climateLayer) { map.removeLayer(climateLayer); climateLayer = null; }
+  selectedFeature = null;
+  document.getElementById("infoPanel").style.display = "none";
   if (state.imcActive || state.variable === "imc") return;
 
   showLoader();
@@ -235,13 +246,21 @@ async function loadClimateLayer() {
       onEachFeature: (feat, layer) => {
         layer.on({
           mouseover(e) {
-            e.target.setStyle({ weight: 1.5, color: "#111", fillOpacity: 0.95 });
+            if (e.target !== selectedFeature)
+              e.target.setStyle({ weight: 1.8, color: "#3a6ea8", fillOpacity: 0.95 });
             layer.bindTooltip(buildTooltip(feat.properties, state.variable, false), { sticky: true }).openTooltip();
           },
           mouseout(e) {
-            climateLayer.resetStyle(e.target);
+            if (e.target !== selectedFeature) climateLayer.resetStyle(e.target);
           },
-          click() {
+          click(e) {
+            // Quitar resaltado anterior
+            if (selectedFeature && climateLayer) climateLayer.resetStyle(selectedFeature);
+            // Resaltar el nuevo
+            selectedFeature = e.target;
+            e.target.setStyle({ weight: 2.5, color: "#1e5bb5", fillOpacity: 0.97,
+                                 dashArray: null });
+            e.target.bringToFront();
             showInfoPanel(feat.properties, state.variable, false);
           },
         });
@@ -260,6 +279,8 @@ async function loadClimateLayer() {
 async function loadImcLayer() {
   if (climateLayer) { map.removeLayer(climateLayer); climateLayer = null; }
   if (imcLayer)     { map.removeLayer(imcLayer);     imcLayer     = null; }
+  selectedFeature = null;
+  document.getElementById("infoPanel").style.display = "none";
   if (!state.imcActive) { loadClimateLayer(); return; }
 
   showLoader();
@@ -275,13 +296,18 @@ async function loadImcLayer() {
       onEachFeature: (feat, layer) => {
         layer.on({
           mouseover(e) {
-            e.target.setStyle({ weight: 1.5, color: "#111", fillOpacity: 0.95 });
+            if (e.target !== selectedFeature)
+              e.target.setStyle({ weight: 1.8, color: "#3a6ea8", fillOpacity: 0.95 });
             layer.bindTooltip(buildTooltip(feat.properties, null, true), { sticky: true }).openTooltip();
           },
           mouseout(e) {
-            imcLayer.resetStyle(e.target);
+            if (e.target !== selectedFeature) imcLayer.resetStyle(e.target);
           },
-          click() {
+          click(e) {
+            if (selectedFeature && imcLayer) imcLayer.resetStyle(selectedFeature);
+            selectedFeature = e.target;
+            e.target.setStyle({ weight: 2.5, color: "#1e5bb5", fillOpacity: 0.97 });
+            e.target.bringToFront();
             showInfoPanel(feat.properties, null, true);
           },
         });

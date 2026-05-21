@@ -83,7 +83,7 @@ html, body {
   padding: 0 24px;
   z-index: 1100;
   box-shadow: 0 2px 16px rgba(0,0,0,0.45);
-  border-bottom: 2px solid rgba(200,16,46,0.8);
+  border-bottom: 2px solid rgba(45,84,148,0.9);
   animation: fadeInDown 0.5s cubic-bezier(0.22,1,0.36,1) both, navbarGlow 6s ease-in-out 1s infinite;
   overflow: hidden;
 }
@@ -215,7 +215,7 @@ html, body {
   width: var(--sidebar-w);
   min-width: var(--sidebar-w);
   background: linear-gradient(180deg, #1a2a4e 0%, #243358 35%, #2e3f66 65%, #3d4d6e 85%, #4a5568 100%);
-  border-right: 3px solid var(--rojo);
+  border-right: 3px solid #2d5494;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 14px 12px 20px 12px;
@@ -862,10 +862,10 @@ html, body {
   color: var(--azul);
 }
 
-/* Panel de información */
+/* Panel de información — debajo del buscador flotante */
 .map-info-panel {
   position: absolute;
-  top: 72px;
+  top: 200px;
   left: 16px;
   z-index: 900;
   background: var(--blanco);
@@ -971,7 +971,7 @@ html, body {
   text-transform: uppercase;
   letter-spacing: 0.4px;
   margin-bottom: 4px;
-  border-bottom: 2px solid var(--rojo);
+  border-bottom: 2px solid #2d5494;
   padding-bottom: 5px;
 }
 
@@ -1052,7 +1052,7 @@ html, body {
   justify-content: space-between;
   padding: 0 20px;
   z-index: 1100;
-  border-top: 2px solid var(--rojo);
+  border-top: 2px solid #2d5494;
 }
 
 .footer-left,
