@@ -1,5 +1,6 @@
 # ── Datos originales (pesados, solo van los simplificados) ──
 data/*.geojson
+!data/simplified/*.geojson
 data/r.sh
 data/layers/
 
