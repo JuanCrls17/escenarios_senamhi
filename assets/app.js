@@ -194,18 +194,26 @@ function buildClimateLegend(variable) {
 function buildImcLegend() {
   const el = document.getElementById("mapLegend");
   const items = [
-    ["Muy Alto (≥ 0.75)", "#d7191c"],
-    ["Alto (0.50–0.75)",  "#f7941d"],
-    ["Medio (0.25–0.50)", "#f1dd00"],
-    ["Bajo (< 0.25)",     "#9bc68b"],
-  ].map(([lbl, c]) =>
-    `<div class="legend-item">
-      <span class="legend-swatch" style="background:${c}"></span>
-      <span class="legend-label">${lbl}</span>
+    ["Muy Alto", "≥ 0.75", "#d7191c", "Exposición crítica a múltiples peligros climáticos"],
+    ["Alto",     "0.50–0.75", "#f7941d", "Alta concurrencia de amenazas climáticas"],
+    ["Medio",    "0.25–0.50", "#f1dd00", "Exposición moderada a peligros climáticos"],
+    ["Bajo",     "< 0.25",    "#9bc68b", "Baja exposición a peligros climáticos"],
+  ].map(([cat, rng, c, desc]) =>
+    `<div class="legend-item" style="align-items:flex-start; margin-bottom:8px;">
+      <span class="legend-swatch" style="background:${c}; margin-top:3px; flex-shrink:0;"></span>
+      <span style="display:flex; flex-direction:column; gap:1px;">
+        <span class="legend-label" style="font-weight:700; color:#1a2236;">${cat} <span style="font-weight:400; color:#888;">(${rng})</span></span>
+        <span style="font-size:0.62rem; color:#6b7a8d; line-height:1.3;">${desc}</span>
+      </span>
     </div>`
   ).join("");
 
-  el.innerHTML = `<div class="legend-title">Índice Multipeligro (IMC)</div>${items}`;
+  el.innerHTML = `
+    <div class="legend-title">Índice Multipeligro Climático</div>
+    <div style="font-size:0.62rem; color:#6b7a8d; margin-bottom:8px; line-height:1.4; border-bottom:1px solid #e8e8e8; padding-bottom:6px;">
+      Índice compuesto que integra múltiples peligros climáticos proyectados para el período 2036–2065 respecto a 1981–2010.
+    </div>
+    ${items}`;
 }
 
 // ─── Cargar/refrescar capa climática ─────────────────────

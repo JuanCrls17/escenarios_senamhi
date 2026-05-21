@@ -218,8 +218,9 @@ html, body {
 }
 
 .radio-card.active {
-  background: rgba(200,16,46,0.22);
-  border-color: var(--rojo);
+  background: linear-gradient(135deg, rgba(58,110,168,0.35) 0%, rgba(94,143,204,0.25) 100%);
+  border-color: #4a7ec0;
+  box-shadow: 0 0 0 1px rgba(74,126,192,0.3);
 }
 
 .radio-dot {
@@ -232,9 +233,9 @@ html, body {
 }
 
 .radio-card.active .radio-dot {
-  background: var(--rojo);
-  border-color: var(--rojo);
-  box-shadow: 0 0 0 3px rgba(200,16,46,0.28);
+  background: #4a7ec0;
+  border-color: #4a7ec0;
+  box-shadow: 0 0 0 3px rgba(74,126,192,0.35);
 }
 
 .radio-title {
@@ -281,10 +282,11 @@ html, body {
 }
 
 .btn-season.active {
-  background: var(--rojo);
-  border-color: var(--rojo);
+  background: linear-gradient(135deg, #3a6ea8 0%, #4a7ec0 50%, #5e8fcc 100%);
+  border-color: #4a7ec0;
   color: var(--blanco);
   font-weight: 700;
+  box-shadow: 0 2px 8px rgba(74,126,192,0.45);
 }
 
 /* Botones de estación bloqueados (cuando IMC está activo) */
@@ -300,9 +302,10 @@ html, body {
   border-color: rgba(255,255,255,0.25);
 }
 .radio-card.imc-card.active {
-  background: rgba(200,16,46,0.22);
-  border-color: var(--rojo);
+  background: linear-gradient(135deg, rgba(58,110,168,0.35) 0%, rgba(94,143,204,0.25) 100%);
+  border-color: #4a7ec0;
   border-style: solid;
+  box-shadow: 0 0 0 1px rgba(74,126,192,0.3);
 }
 
 /* Toggle IMC */
