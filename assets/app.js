@@ -96,15 +96,15 @@ function imcLabel(value) {
 // ─── Nombre de archivo GeoJSON ────────────────────────────
 function climateFilename(variable, estacion) {
   const est = estacion === "anual" ? "anual" : estacion.toUpperCase();
-  return `data/simplified/distritos_cambio_${variable}_${est}_cmip6_2036_2065_5km.geojson`;
+  return `data/distritos_cambio_${variable}_${est}_cmip6_2036_2065_5km.geojson`;
 }
 
 function imcFilename(tipo) {
-  return `data/simplified/indice_multipeligro_${tipo}_2036_2065.geojson`;
+  return `data/indice_multipeligro_${tipo}_2036_2065.geojson`;
 }
 
 function refFilename(layer) {
-  return `data/simplified/${layer}.geojson`;
+  return `data/${layer}.geojson`;
 }
 
 // ─── Carga de GeoJSON con fetch ───────────────────────────
