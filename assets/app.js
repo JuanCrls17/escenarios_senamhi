@@ -248,7 +248,6 @@ async function loadClimateLayer() {
           mouseover(e) {
             if (e.target !== selectedFeature)
               e.target.setStyle({ weight: 1.8, color: "#3a6ea8", fillOpacity: 0.95 });
-            layer.bindTooltip(buildTooltip(feat.properties, state.variable, false), { sticky: true }).openTooltip();
           },
           mouseout(e) {
             if (e.target !== selectedFeature) climateLayer.resetStyle(e.target);
@@ -258,7 +257,7 @@ async function loadClimateLayer() {
             selectedFeature = e.target;
             e.target.setStyle({ weight: 2.5, color: "#1e5bb5", fillOpacity: 0.97, dashArray: null });
             e.target.bringToFront();
-            e.target.closeTooltip();
+            if (refGeoLayer) refGeoLayer.bringToFront();
             showInfoPanel(feat.properties, state.variable, false);
           },
         });
@@ -297,7 +296,6 @@ async function loadImcLayer() {
           mouseover(e) {
             if (e.target !== selectedFeature)
               e.target.setStyle({ weight: 1.8, color: "#3a6ea8", fillOpacity: 0.95 });
-            layer.bindTooltip(buildTooltip(feat.properties, null, true), { sticky: true }).openTooltip();
           },
           mouseout(e) {
             if (e.target !== selectedFeature) imcLayer.resetStyle(e.target);
@@ -307,7 +305,7 @@ async function loadImcLayer() {
             selectedFeature = e.target;
             e.target.setStyle({ weight: 2.5, color: "#1e5bb5", fillOpacity: 0.97 });
             e.target.bringToFront();
-            e.target.closeTooltip();
+            if (refGeoLayer) refGeoLayer.bringToFront();
             showInfoPanel(feat.properties, null, true);
           },
         });

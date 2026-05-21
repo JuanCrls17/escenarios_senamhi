@@ -959,13 +959,13 @@ html, body {
   box-shadow: var(--shadow-md);
   max-height: 320px;
   overflow-y: auto;
-  min-width: 155px;
+  min-width: 180px;
   scrollbar-width: thin;
   scrollbar-color: var(--gris-borde) transparent;
 }
 
 .legend-title {
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: var(--azul);
   text-transform: uppercase;
@@ -976,7 +976,7 @@ html, body {
 }
 
 .legend-ref-note {
-  font-size: 0.63rem;
+  font-size: 0.72rem;
   color: #6b7a8d;
   font-style: italic;
   margin-bottom: 8px;
@@ -989,20 +989,20 @@ html, body {
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 7px;
-  margin-bottom: 4px;
+  gap: 8px;
+  margin-bottom: 5px;
 }
 
 .legend-swatch {
-  width: 14px;
-  height: 12px;
+  width: 16px;
+  height: 14px;
   border-radius: 2px;
   border: 1px solid rgba(0,0,0,0.12);
   flex-shrink: 0;
 }
 
 .legend-label {
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   color: var(--gris-txt);
   white-space: nowrap;
 }
