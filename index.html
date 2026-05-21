@@ -160,15 +160,30 @@
 
       <!-- Buscador flotante sobre el mapa -->
       <div class="map-search-float" id="mapSearchFloat">
+        <!-- Franja superior -->
+        <div class="msf-topbar">
+          <div class="msf-topbar-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+          </div>
+          <div class="msf-topbar-text">
+            <span class="msf-topbar-title">Explorar territorio</span>
+            <span class="msf-topbar-sub">Busca tu lugar de interés en el Perú</span>
+          </div>
+        </div>
+        <!-- Input de búsqueda -->
         <div class="msf-header">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <svg class="msf-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
           <input type="text" id="placeInput" class="msf-input"
-            placeholder="Busca tu lugar de interés…"
+            placeholder="Ciudad, distrito, río, montaña…"
             autocomplete="off" />
           <button class="msf-clear" id="placeClearBtn" title="Limpiar" style="display:none;">✕</button>
         </div>
+        <!-- Sugerencias -->
         <div class="msf-suggestions" id="placeSuggestions"></div>
       </div>
 

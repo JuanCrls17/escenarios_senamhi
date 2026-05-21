@@ -423,10 +423,10 @@ placeInput.addEventListener("input", () => {
   if (q.length < 2) { hideSuggestions(); return; }
 
   showSuggestions(`<div class="place-searching">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4a7ec0" stroke-width="2.5" style="animation:spin 0.7s linear infinite">
-      <circle cx="12" cy="12" r="10" stroke-dasharray="40 20"/>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4a7ec0" stroke-width="2.5" style="animation:spin 0.7s linear infinite;flex-shrink:0">
+      <path d="M12 2a10 10 0 0 1 10 10" />
     </svg>
-    Buscando…
+    Buscando resultados…
   </div>`);
 
   searchTimer = setTimeout(async () => {
@@ -436,20 +436,24 @@ placeInput.addEventListener("input", () => {
       const data = await res.json();
 
       if (!data.length) {
-        showSuggestions(`<div class="place-suggestions-empty">No se encontraron resultados para "${q}"</div>`);
+        showSuggestions(`<div class="place-suggestions-empty">
+          <div class="place-suggestions-empty-icon">🔍</div>
+          <div class="place-suggestions-empty-text">Sin resultados para "<strong>${q}</strong>"<br>Intenta con otro nombre</div>
+        </div>`);
         return;
       }
 
       const items = data.map(item => {
-        const name   = item.display_name.split(",")[0];
-        const detail = item.display_name.split(",").slice(1, 3).join(",").trim();
+        const parts  = item.display_name.split(",");
+        const name   = parts[0].trim();
+        const detail = parts.slice(1, 3).join(",").trim();
         return `<div class="place-suggestion-item"
                   data-lat="${item.lat}" data-lon="${item.lon}" data-name="${name}">
-          <span class="place-suggestion-pin">📍</span>
-          <span>
+          <div class="place-suggestion-pin-wrap">📍</div>
+          <div>
             <div class="place-suggestion-name">${name}</div>
             <div class="place-suggestion-detail">${detail}</div>
-          </span>
+          </div>
         </div>`;
       }).join("");
 
@@ -467,7 +471,10 @@ placeInput.addEventListener("input", () => {
         });
       });
     } catch {
-      showSuggestions(`<div class="place-suggestions-empty">Error al buscar. Verifica tu conexión.</div>`);
+      showSuggestions(`<div class="place-suggestions-empty">
+        <div class="place-suggestions-empty-icon">⚠️</div>
+        <div class="place-suggestions-empty-text">Error de conexión. Inténtalo de nuevo.</div>
+      </div>`);
     }
   }, 380);
 });
