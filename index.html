@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SENAMHI PERÚ — Escenarios Climáticos CMIP6</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="assets/style_standalone.css" />
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <header class="navbar">
+    <div class="navbar-brand">
+      <img src="assets/logo_senamhi.png" alt="SENAMHI" class="navbar-logo" />
+      <div class="navbar-titles">
+        <span class="navbar-title">SENAMHI PERÚ</span>
+        <span class="navbar-subtitle">Escenarios Climáticos · CMIP6 · 2036–2065</span>
+      </div>
+    </div>
+    <div class="navbar-right">
+      <img src="assets/logo_minam.jpg" alt="MINAM" class="navbar-logo-minam" />
+      <span class="navbar-badge">BETA</span>
+    </div>
+  </header>
+
+  <!-- ===================== LAYOUT PRINCIPAL ===================== -->
+  <div class="layout">
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- Toggle sidebar (móvil) -->
+      <button class="sidebar-toggle" id="sidebarToggle" title="Ocultar panel">&#9776;</button>
+
+      <!-- Sección: Variable climática -->
+      <div class="sidebar-section">
+        <div class="section-label">Variable climática</div>
+        <div class="radio-group" id="varGroup">
+          <label class="radio-card active" data-value="pr">
+            <span class="radio-dot"></span>
+            <div>
+              <span class="radio-title">Precipitación</span>
+              <span class="radio-desc">Cambio relativo (%)</span>
+            </div>
+          </label>
+          <label class="radio-card" data-value="tasmax">
+            <span class="radio-dot"></span>
+            <div>
+              <span class="radio-title">T° Máxima</span>
+              <span class="radio-desc">Cambio proyectado (°C)</span>
+            </div>
+          </label>
+          <label class="radio-card" data-value="tasmin">
+            <span class="radio-dot"></span>
+            <div>
+              <span class="radio-title">T° Mínima</span>
+              <span class="radio-desc">Cambio proyectado (°C)</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Sección: Estación -->
+      <div class="sidebar-section">
+        <div class="section-label">Estación del año</div>
+        <div class="btn-group" id="seasonGroup">
+          <button class="btn-season active" data-value="anual">Anual</button>
+          <button class="btn-season" data-value="DEF">Verano</button>
+          <button class="btn-season" data-value="MAM">Otoño</button>
+          <button class="btn-season" data-value="JJA">Invierno</button>
+          <button class="btn-season" data-value="SON">Primavera</button>
+        </div>
+      </div>
+
+      <!-- Sección: Índice multipeligro -->
+      <div class="sidebar-section">
+        <div class="section-label">Índice Multipeligro Climático</div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="imcToggle" />
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">Activar IMC</span>
+        </label>
+        <div id="imcTypeGroup" class="radio-group" style="display:none; margin-top:10px;">
+          <label class="radio-card active" data-value="agricola">
+            <span class="radio-dot"></span>
+            <div><span class="radio-title">Agricultura</span></div>
+          </label>
+          <label class="radio-card" data-value="electrica">
+            <span class="radio-dot"></span>
+            <div><span class="radio-title">Electricidad</span></div>
+          </label>
+          <label class="radio-card" data-value="vivienda">
+            <span class="radio-dot"></span>
+            <div><span class="radio-title">Vivienda</span></div>
+          </label>
+          <label class="radio-card" data-value="mineria">
+            <span class="radio-dot"></span>
+            <div><span class="radio-title">Minería</span></div>
+          </label>
+          <label class="radio-card" data-value="salud">
+            <span class="radio-dot"></span>
+            <div><span class="radio-title">Salud</span></div>
+          </label>
+          <label class="radio-card" data-value="cultura">
+            <span class="radio-dot"></span>
+            <div><span class="radio-title">Cultura</span></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Sección: Capas de referencia (radio exclusivo) -->
+      <div class="sidebar-section">
+        <div class="section-label">Capa de referencia</div>
+        <div class="radio-group" id="refLayerGroup">
+          <label class="radio-card active" data-value="ninguna">
+            <span class="radio-dot"></span>
+            <div><span class="radio-title">Ninguna</span></div>
+          </label>
+          <label class="radio-card" data-value="departamentos">
+            <span class="radio-dot"></span>
+            <div>
+              <span class="radio-title">Departamentos</span>
+              <span class="radio-desc">25 regiones</span>
+            </div>
+          </label>
+          <label class="radio-card" data-value="provincias">
+            <span class="radio-dot"></span>
+            <div>
+              <span class="radio-title">Provincias</span>
+              <span class="radio-desc">196 provincias</span>
+            </div>
+          </label>
+          <label class="radio-card" data-value="cuencas">
+            <span class="radio-dot"></span>
+            <div>
+              <span class="radio-title">Cuencas</span>
+              <span class="radio-desc">231 unidades hidrográficas</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Sección: Buscar coordenadas -->
+      <div class="sidebar-section">
+        <div class="section-label">Buscar por coordenadas</div>
+        <div class="coord-inputs">
+          <div class="input-group">
+            <label for="latInput">Latitud</label>
+            <input type="text" id="latInput" placeholder="-12.0464" value="-12.0464" />
+          </div>
+          <div class="input-group">
+            <label for="lonInput">Longitud</label>
+            <input type="text" id="lonInput" placeholder="-77.0428" value="-77.0428" />
+          </div>
+        </div>
+        <button class="btn-buscar" id="btnBuscar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Buscar ubicación
+        </button>
+      </div>
+
+      <!-- Sección: Periodo -->
+      <div class="sidebar-section">
+        <div class="section-label">Período de proyección</div>
+        <div class="periodo-badge">2036 – 2065 <span>·</span> CMIP6</div>
+      </div>
+
+    </aside>
+
+    <!-- ========== MAPA ========== -->
+    <main class="map-container">
+
+      <!-- Controles de zoom personalizados -->
+      <div class="map-zoom-ctrl" id="zoomCtrl">
+        <button id="zoomIn"  title="Acercar">+</button>
+        <button id="zoomOut" title="Alejar">−</button>
+      </div>
+
+      <!-- Panel info al hacer clic -->
+      <div class="map-info-panel" id="infoPanel" style="display:none;">
+        <div class="info-panel-header">
+          <span>Información del punto</span>
+          <button id="closeInfoPanel">✕</button>
+        </div>
+        <div class="info-panel-body" id="infoPanelBody"></div>
+      </div>
+
+      <!-- Leyenda flotante -->
+      <div class="map-legend" id="mapLegend"></div>
+
+      <!-- Loader -->
+      <div class="map-loader" id="mapLoader">
+        <div class="spinner"></div>
+        <span>Cargando datos...</span>
+      </div>
+
+      <!-- Mapa Leaflet -->
+      <div id="map"></div>
+
+    </main>
+  </div>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="footer-left">
+      © 2025 SENAMHI — Servicio Nacional de Meteorología e Hidrología del Perú
+    </div>
+    <div class="footer-right">
+      Escenarios CMIP6 · Resolución 5 km · Período 2036–2065
+    </div>
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Lógica principal -->
+  <script src="assets/app.js"></script>
+
+</body>
+</html>

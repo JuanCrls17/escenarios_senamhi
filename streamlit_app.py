@@ -17,13 +17,9 @@ st.set_page_config(
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
-SIMP_DIR = os.path.join(DATA_DIR, "simplified")
 
 def _simp(filename):
-    """Devuelve la ruta simplificada si existe, si no la original."""
-    simp_path = os.path.join(SIMP_DIR, filename)
-    orig_path = os.path.join(DATA_DIR, filename)
-    return simp_path if os.path.exists(simp_path) else orig_path
+    return os.path.join(DATA_DIR, filename)
 
 LAYER_PATHS = {
     "departamentos": _simp("departamentos.geojson"),

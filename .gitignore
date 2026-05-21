@@ -1,8 +1,5 @@
-# ── Datos originales (pesados, solo van los simplificados) ──
-data/*.geojson
-!data/simplified/*.geojson
-data/r.sh
-data/layers/
+# ── Datos ──
+# (todos los GeoJSON en data/ son los simplificados y sí van al repo)
 
 # ── Python ──
 __pycache__/
