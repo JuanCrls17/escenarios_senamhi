@@ -387,30 +387,119 @@ setupRadioGroup("refLayerGroup", value => {
   loadRefLayer(value);
 });
 
+// ─── Marcador de búsqueda ─────────────────────────────────
+function placeSearchMarker(lat, lon, label) {
+  if (searchMarker) { map.removeLayer(searchMarker); searchMarker = null; }
+  const icon = L.divIcon({
+    className: "",
+    html: '<div class="search-marker-icon"></div>',
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
+  });
+  searchMarker = L.marker([lat, lon], { icon })
+    .addTo(map)
+    .bindTooltip(label || `${lat.toFixed(5)}, ${lon.toFixed(5)}`, { permanent: false });
+  map.setView([lat, lon], 11, { animate: true });
+}
+
+// ─── Buscador de lugares (Nominatim) ─────────────────────
+const placeInput      = document.getElementById("placeInput");
+const placeSuggestions= document.getElementById("placeSuggestions");
+const placeClearBtn   = document.getElementById("placeClearBtn");
+let   searchTimer     = null;
+
+function hideSuggestions() {
+  placeSuggestions.innerHTML = "";
+  placeSuggestions.style.display = "none";
+}
+
+function showSuggestions(html) {
+  placeSuggestions.innerHTML = html;
+  placeSuggestions.style.display = "block";
+}
+
+placeInput.addEventListener("input", () => {
+  const q = placeInput.value.trim();
+  placeClearBtn.style.display = q ? "block" : "none";
+  clearTimeout(searchTimer);
+  if (q.length < 2) { hideSuggestions(); return; }
+
+  showSuggestions(`<div class="place-searching">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4a7ec0" stroke-width="2.5" style="animation:spin 0.7s linear infinite">
+      <circle cx="12" cy="12" r="10" stroke-dasharray="40 20"/>
+    </svg>
+    Buscando…
+  </div>`);
+
+  searchTimer = setTimeout(async () => {
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&countrycodes=pe&limit=6&addressdetails=1`;
+      const res  = await fetch(url, { headers: { "Accept-Language": "es" } });
+      const data = await res.json();
+
+      if (!data.length) {
+        showSuggestions(`<div class="place-suggestions-empty">No se encontraron resultados para "${q}"</div>`);
+        return;
+      }
+
+      const items = data.map(item => {
+        const name   = item.display_name.split(",")[0];
+        const detail = item.display_name.split(",").slice(1, 3).join(",").trim();
+        return `<div class="place-suggestion-item"
+                  data-lat="${item.lat}" data-lon="${item.lon}" data-name="${name}">
+          <span class="place-suggestion-pin">📍</span>
+          <span>
+            <div class="place-suggestion-name">${name}</div>
+            <div class="place-suggestion-detail">${detail}</div>
+          </span>
+        </div>`;
+      }).join("");
+
+      showSuggestions(items);
+
+      placeSuggestions.querySelectorAll(".place-suggestion-item").forEach(el => {
+        el.addEventListener("click", () => {
+          const lat  = parseFloat(el.dataset.lat);
+          const lon  = parseFloat(el.dataset.lon);
+          const name = el.dataset.name;
+          placeInput.value = name;
+          placeClearBtn.style.display = "block";
+          hideSuggestions();
+          placeSearchMarker(lat, lon, name);
+        });
+      });
+    } catch {
+      showSuggestions(`<div class="place-suggestions-empty">Error al buscar. Verifica tu conexión.</div>`);
+    }
+  }, 380);
+});
+
+placeClearBtn.addEventListener("click", () => {
+  placeInput.value = "";
+  placeClearBtn.style.display = "none";
+  hideSuggestions();
+  if (searchMarker) { map.removeLayer(searchMarker); searchMarker = null; }
+});
+
+document.addEventListener("click", e => {
+  if (!e.target.closest(".place-search-wrap")) hideSuggestions();
+});
+
+// ─── Toggle panel coordenadas ─────────────────────────────
+document.getElementById("coordToggle").addEventListener("click", () => {
+  const panel = document.getElementById("coordPanel");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+});
+
 // ─── Búsqueda por coordenadas ─────────────────────────────
 document.getElementById("btnBuscar").addEventListener("click", () => {
   const lat = parseFloat(document.getElementById("latInput").value.replace(",", "."));
   const lon = parseFloat(document.getElementById("lonInput").value.replace(",", "."));
-
   if (isNaN(lat) || isNaN(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
     alert("Coordenadas no válidas. Latitud: −90 a 90 · Longitud: −180 a 180");
     return;
   }
-
-  if (searchMarker) { map.removeLayer(searchMarker); searchMarker = null; }
-
-  map.setView([lat, lon], 11, { animate: true });
-
-  const icon = L.divIcon({
-    className: "",
-    html: '<div class="search-marker-icon"></div>',
-    iconSize: [18, 18],
-    iconAnchor: [9, 9],
-  });
-
-  searchMarker = L.marker([lat, lon], { icon })
-    .addTo(map)
-    .bindTooltip(`${lat.toFixed(5)}, ${lon.toFixed(5)}`, { permanent: false });
+  placeSearchMarker(lat, lon);
 });
 
 // ─── Carga inicial ────────────────────────────────────────

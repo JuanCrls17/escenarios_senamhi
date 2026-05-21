@@ -354,6 +354,159 @@ html, body {
   color: rgba(255,255,255,0.85);
 }
 
+/* ── Buscador de lugares ── */
+.place-search-wrap {
+  position: relative;
+}
+
+.place-search-input-row {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.28);
+  border-radius: 8px;
+  padding: 0 10px;
+  gap: 7px;
+  transition: border-color 0.18s, background 0.18s;
+}
+
+.place-search-input-row:focus-within {
+  border-color: #4a7ec0;
+  background: rgba(255,255,255,0.18);
+  box-shadow: 0 0 0 3px rgba(74,126,192,0.2);
+}
+
+.place-search-icon {
+  color: rgba(255,255,255,0.5);
+  flex-shrink: 0;
+}
+
+.place-search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--blanco);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  padding: 9px 0;
+}
+
+.place-search-input::placeholder {
+  color: rgba(255,255,255,0.38);
+  font-style: italic;
+}
+
+.place-clear-btn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.45);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.15s;
+  line-height: 1;
+}
+
+.place-clear-btn:hover { color: var(--blanco); }
+
+.place-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: #fff;
+  border: 1px solid #d0d7e3;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+  z-index: 2000;
+  overflow: hidden;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.place-suggestion-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f3f8;
+  transition: background 0.12s;
+}
+
+.place-suggestion-item:last-child { border-bottom: none; }
+
+.place-suggestion-item:hover {
+  background: #e8f0ff;
+}
+
+.place-suggestion-pin {
+  color: #c8102e;
+  font-size: 0.9rem;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.place-suggestion-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1a2236;
+  line-height: 1.3;
+}
+
+.place-suggestion-detail {
+  font-size: 0.68rem;
+  color: #6b7a8d;
+  margin-top: 1px;
+}
+
+.place-suggestions-empty {
+  padding: 12px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #888;
+  font-style: italic;
+}
+
+.place-searching {
+  padding: 12px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #4a7ec0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Toggle coordenadas */
+.coord-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 9px;
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.42);
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s;
+}
+
+.coord-toggle:hover { color: rgba(255,255,255,0.7); }
+
+.coord-panel {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  animation: fadeDown 0.18s ease;
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* Inputs coordenadas */
 .coord-inputs {
   display: flex;
@@ -726,13 +879,37 @@ html, body {
 
 .leaflet-popup-tip { display: none !important; }
 
-/* Marker de búsqueda */
+/* Marker de búsqueda con pulso */
 .search-marker-icon {
-  width: 18px; height: 18px;
-  background: var(--rojo);
+  width: 16px; height: 16px;
+  background: #c8102e;
   border: 3px solid var(--blanco);
   border-radius: 50%;
   box-shadow: 0 2px 8px rgba(200,16,46,0.5);
+  position: relative;
+}
+
+.search-marker-icon::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: rgba(200,16,46,0.25);
+  animation: markerPulse 1.6s ease-out infinite;
+}
+
+.search-marker-icon::after {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: rgba(200,16,46,0.1);
+  animation: markerPulse 1.6s ease-out 0.4s infinite;
+}
+
+@keyframes markerPulse {
+  0%   { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(1.8); opacity: 0; }
 }
 
 /* =========================================================
