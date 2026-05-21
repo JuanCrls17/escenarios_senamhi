@@ -18,13 +18,13 @@
   --shadow-md:  0 4px 16px rgba(0,0,0,0.14);
   --radius:     8px;
   --sidebar-w:  280px;
-  --navbar-h:   72px;
+  --navbar-h:   80px;
   --footer-h:   36px;
 }
 
 html, body {
   height: 100%;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
   font-size: 14px;
   color: #1a2236;
   background: var(--gris-bg);
@@ -38,14 +38,14 @@ html, body {
   position: fixed;
   top: 0; left: 0; right: 0;
   height: var(--navbar-h);
-  background: linear-gradient(90deg, #002070 0%, #003087 45%, #00469b 100%);
+  background: linear-gradient(90deg, #0d1b3e 0%, #1a2f5c 30%, #2c4172 60%, #4a5568 100%);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
   z-index: 1100;
-  box-shadow: 0 2px 12px rgba(0,32,112,0.45);
-  border-bottom: 2px solid rgba(200,16,46,0.7);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.45);
+  border-bottom: 2px solid rgba(200,16,46,0.8);
 }
 
 .navbar-brand {
@@ -54,6 +54,7 @@ html, body {
   gap: 14px;
   flex: 1;
   min-width: 0;
+  justify-content: flex-start;
 }
 
 .navbar-logo {
@@ -88,27 +89,31 @@ html, body {
 .navbar-titles {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   min-width: 0;
+  flex: 1;
 }
 
 .navbar-title {
   color: var(--blanco);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  line-height: 1.25;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  line-height: 1.2;
   text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
 }
 
 .navbar-subtitle {
-  color: rgba(255,255,255,0.60);
-  font-size: 0.63rem;
-  font-weight: 400;
-  letter-spacing: 0.3px;
+  color: rgba(255,255,255,0.62);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
   white-space: nowrap;
 }
 
@@ -145,7 +150,7 @@ html, body {
 .sidebar {
   width: var(--sidebar-w);
   min-width: var(--sidebar-w);
-  background: var(--azul);
+  background: linear-gradient(180deg, #1a2a4e 0%, #243358 35%, #2e3f66 65%, #3d4d6e 85%, #4a5568 100%);
   border-right: 3px solid var(--rojo);
   overflow-y: auto;
   overflow-x: hidden;
@@ -178,11 +183,12 @@ html, body {
 }
 
 .section-label {
-  font-size: 0.68rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.66rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: rgba(255,255,255,0.55);
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.60);
   margin-bottom: 8px;
 }
 
@@ -233,6 +239,7 @@ html, body {
 
 .radio-title {
   display: block;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.82rem;
   font-weight: 600;
   color: rgba(255,255,255,0.92);
@@ -421,6 +428,19 @@ html, body {
 
 .periodo-badge span { color: rgba(255,255,255,0.35); }
 
+/* Nota período de referencia */
+.ref-period-note {
+  margin-top: 8px;
+  font-size: 0.64rem;
+  color: rgba(255,255,255,0.42);
+  font-style: italic;
+  line-height: 1.4;
+  padding: 5px 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 5px;
+  border-left: 2px solid rgba(255,255,255,0.18);
+}
+
 /* =========================================================
    MAPA
    ========================================================= */
@@ -433,7 +453,7 @@ html, body {
 #map {
   width: 100%;
   height: 100%;
-  background: #e8eef4;
+  background: linear-gradient(180deg, #c9dff5 0%, #daeaf7 25%, #eef5fb 55%, #f5f8fc 80%, #e8ecf0 100%);
 }
 
 /* Zoom personalizado */
@@ -644,7 +664,7 @@ html, body {
   position: fixed;
   bottom: 0; left: 0; right: 0;
   height: var(--footer-h);
-  background: var(--azul);
+  background: linear-gradient(90deg, #0d1b3e 0%, #1a2f5c 50%, #4a5568 100%);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -670,8 +690,8 @@ html, body {
 .leaflet-control-layers { display: none !important; }
 
 .leaflet-container {
-  background: #e8eef4;
-  font-family: 'Inter', sans-serif;
+  background: linear-gradient(180deg, #b8d4ee 0%, #cfe4f5 30%, #e8f3fb 65%, #f0f6fc 100%);
+  font-family: 'Montserrat', 'Inter', sans-serif;
 }
 
 .leaflet-tooltip {
