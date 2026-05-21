@@ -359,17 +359,14 @@ document.querySelectorAll(".btn-season").forEach(btn => {
 
 // ─── Variable climática (incluye IMC como opción) ─────────
 setupRadioGroup("varGroup", value => {
-  const imcTypeGroup = document.getElementById("imcTypeGroup");
   if (value === "imc") {
     state.imcActive = true;
     state.variable  = "imc";
-    imcTypeGroup.style.display = "flex";
     setSeasonBlocked(true);
     loadImcLayer();
   } else {
     state.imcActive = false;
     state.variable  = value;
-    imcTypeGroup.style.display = "none";
     setSeasonBlocked(false);
     loadClimateLayer();
   }
@@ -379,12 +376,6 @@ setupRadioGroup("varGroup", value => {
 setupRadioGroup("refLayerGroup", value => {
   state.refLayer = value;
   loadRefLayer(value);
-});
-
-// ─── Tipo IMC ─────────────────────────────────────────────
-setupRadioGroup("imcTypeGroup", value => {
-  state.imcTipo = value;
-  if (state.imcActive) loadImcLayer();
 });
 
 // ─── Búsqueda por coordenadas ─────────────────────────────
