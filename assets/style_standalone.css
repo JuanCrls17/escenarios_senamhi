@@ -946,6 +946,119 @@ html, body {
   font-size: 0.9rem;
 }
 
+/* Barra visual de valor climático */
+.info-value-bar-wrap {
+  margin: 8px 0 4px;
+  padding: 8px 10px;
+  background: #f5f7fc;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+.info-value-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--gris-txt);
+  margin-bottom: 5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.info-value-bar-track {
+  height: 8px;
+  border-radius: 4px;
+  background: #dde3ee;
+  overflow: hidden;
+  position: relative;
+}
+.info-value-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+.info-interpret {
+  margin-top: 7px;
+  font-size: 0.72rem;
+  color: #4a5568;
+  line-height: 1.45;
+  padding: 6px 8px;
+  background: #eef2fb;
+  border-left: 3px solid var(--azul-med);
+  border-radius: 0 4px 4px 0;
+}
+.info-interpret strong { color: var(--azul); }
+
+/* Botón de info (?) junto a variables */
+.var-info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.75);
+  font-size: 0.62rem;
+  font-weight: 800;
+  border: 1px solid rgba(255,255,255,0.3);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.var-info-btn:hover {
+  background: rgba(255,255,255,0.35);
+  color: #fff;
+}
+
+/* Tooltip de información de variable */
+.var-tooltip {
+  position: absolute;
+  z-index: 2000;
+  background: #1a2236;
+  color: #e8f0ff;
+  border-radius: 7px;
+  padding: 10px 13px;
+  font-size: 0.72rem;
+  line-height: 1.55;
+  max-width: 240px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+  pointer-events: none;
+  animation: fadeInDown 0.15s ease;
+}
+.var-tooltip-title {
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: #c8deff;
+  margin-bottom: 5px;
+}
+.var-tooltip-sector {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.var-tooltip-tag {
+  background: rgba(255,255,255,0.12);
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* Distrito resaltado desde buscador */
+.search-highlight-pulse {
+  animation: districtPulse 1.6s ease-out forwards;
+}
+@keyframes districtPulse {
+  0%   { stroke: #f7b731; stroke-width: 3; fill-opacity: 0.98; }
+  60%  { stroke: #f7b731; stroke-width: 2.5; fill-opacity: 0.92; }
+  100% { stroke: #1e5bb5; stroke-width: 2.5; fill-opacity: 0.97; }
+}
+
 /* Leyenda flotante */
 .map-legend {
   position: absolute;

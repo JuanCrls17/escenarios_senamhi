@@ -129,48 +129,152 @@ function buildTooltip(props, variable, isImc) {
   return `<b>${distrito}</b><br>Valor: <b>${fmt}</b>`;
 }
 
+// ─── Interpretaciones textuales ───────────────────────────
+const VAR_INFO = {
+  pr: {
+    title: "Precipitación",
+    desc: "Muestra el cambio porcentual proyectado en las lluvias para 2036–2065 respecto al período de referencia 1981–2010. Valores negativos indican reducción de lluvias; positivos, aumento.",
+    sectores: ["Agua", "Agricultura", "Energía hidráulica", "Gestión de riesgos"],
+  },
+  tasmax: {
+    title: "Temperatura Máxima",
+    desc: "Cambio proyectado en la temperatura máxima diaria (°C). Refleja cuánto más calurosos serán los días más cálidos del año en el futuro.",
+    sectores: ["Salud", "Agricultura", "Infraestructura", "Biodiversidad"],
+  },
+  tasmin: {
+    title: "Temperatura Mínima",
+    desc: "Cambio proyectado en la temperatura mínima diaria (°C). Afecta principalmente las heladas, la biodiversidad altoandina y los ciclos agrícolas.",
+    sectores: ["Agricultura", "Ganadería", "Biodiversidad", "Energía"],
+  },
+  imc: {
+    title: "Índice Multipeligro Climático",
+    desc: "Combina múltiples amenazas climáticas (lluvias extremas, sequías, temperaturas) en un índice normalizado de 0 a 1. A mayor valor, mayor exposición simultánea a peligros.",
+    sectores: ["Planificación territorial", "Gestión de riesgos", "Todos los sectores"],
+  },
+};
+
+function climateInterpret(variable, valor) {
+  if (valor == null) return null;
+  const v = parseFloat(valor);
+  if (isNaN(v)) return null;
+
+  if (variable === "pr") {
+    if (v <= -30) return { text: `Reducción <strong>severa</strong> de lluvias (${v.toFixed(1)}%). Alto riesgo de sequías prolongadas.`, color: "#a04000" };
+    if (v <= -15) return { text: `Reducción <strong>moderada</strong> de lluvias (${v.toFixed(1)}%). Impacto relevante en disponibilidad hídrica.`, color: "#c07030" };
+    if (v <    0) return { text: `Leve reducción de lluvias (${v.toFixed(1)}%). Monitoreo recomendado.`, color: "#888" };
+    if (v <   15) return { text: `Leve aumento de lluvias (${v.toFixed(1)}%). Puede intensificar eventos locales.`, color: "#2a7a4a" };
+    if (v <   30) return { text: `Aumento <strong>moderado</strong> de lluvias (${v.toFixed(1)}%). Mayor riesgo de inundaciones locales.`, color: "#1a5e35" };
+    return { text: `Aumento <strong>significativo</strong> de lluvias (${v.toFixed(1)}%). Riesgo elevado de inundaciones y deslizamientos.`, color: "#003320" };
+  }
+
+  if (variable === "tasmax" || variable === "tasmin") {
+    const lbl = variable === "tasmax" ? "días más cálidos" : "noches más frías";
+    if (v < 0.5)  return { text: `Calentamiento leve (+${v.toFixed(1)}°C en ${lbl}). Cambio dentro de variabilidad natural.`, color: "#f0a020" };
+    if (v < 1.0)  return { text: `Calentamiento <strong>moderado</strong> (+${v.toFixed(1)}°C en ${lbl}). Impactos perceptibles en agricultura y salud.`, color: "#e07010" };
+    if (v < 1.5)  return { text: `Calentamiento <strong>alto</strong> (+${v.toFixed(1)}°C en ${lbl}). Estrés hídrico y térmico significativo.`, color: "#c84000" };
+    if (v < 2.0)  return { text: `Calentamiento <strong>muy alto</strong> (+${v.toFixed(1)}°C en ${lbl}). Riesgo serio para ecosistemas y población.`, color: "#a02000" };
+    return { text: `Calentamiento <strong>crítico</strong> (+${v.toFixed(1)}°C en ${lbl}). Zona entre las más afectadas del país.`, color: "#800010" };
+  }
+
+  return null;
+}
+
+function climateBarConfig(variable, valor) {
+  if (valor == null) return null;
+  const v = parseFloat(valor);
+  if (isNaN(v)) return null;
+
+  if (variable === "pr") {
+    const pct = Math.min(100, Math.max(0, ((v + 100) / 200) * 100));
+    const color = v < 0 ? "#b85c00" : "#2a8a50";
+    return { pct, color, minLabel: "−100%", maxLabel: "+100%", midLabel: "0%" };
+  }
+  if (variable === "tasmax" || variable === "tasmin") {
+    const pct = Math.min(100, Math.max(0, (v / 4.0) * 100));
+    const color = v < 1.0 ? "#f0a020" : v < 2.0 ? "#e05010" : "#a01010";
+    return { pct, color, minLabel: "0°C", maxLabel: "+4°C", midLabel: "+2°C" };
+  }
+  return null;
+}
+
 // ─── Panel de información lateral ─────────────────────────
 function showInfoPanel(props, variable, isImc) {
   const panel = document.getElementById("infoPanel");
   const body  = document.getElementById("infoPanelBody");
 
   const distrito = props.DISTRITO || props.DEPARTAMEN || props.PROVINCIA || props.NOMBRE || "—";
+  const dpto     = props.DEPARTAMEN || props.DPTO || "";
   const valor    = props.valor != null ? props.valor : null;
 
   const rows = [];
+  rows.push({ k: "Ubicación", v: dpto ? `${distrito}<br><small style="color:#888">${dpto}</small>` : distrito, raw: true });
 
-  rows.push({ k: "Distrito", v: distrito });
+  let barHtml = "";
+  let interpretHtml = "";
 
   if (isImc) {
     const lbl = valor != null ? imcLabel(valor) : "Sin dato";
     const fmt = valor != null ? parseFloat(valor).toFixed(3) : "—";
-    rows.push({ k: "Tipo IMC",   v: state.imcTipo.charAt(0).toUpperCase() + state.imcTipo.slice(1) });
-    rows.push({ k: "Valor IMC",  v: fmt, highlight: true });
-    rows.push({ k: "Categoría",  v: lbl });
+    const imcColors = { "Muy Alto": "#d7191c", "Alto": "#f7941d", "Medio": "#c8b800", "Bajo": "#4a9a50" };
+    const imcPct    = valor != null ? Math.min(100, parseFloat(valor) * 100) : 0;
+    rows.push({ k: "Categoría", v: `<span style="font-weight:700;color:${imcColors[lbl]||'#888'}">${lbl}</span>`, raw: true });
+    rows.push({ k: "Valor IMC", v: fmt, highlight: true });
+    barHtml = `
+      <div class="info-value-bar-wrap">
+        <div class="info-value-bar-label"><span>Nivel de peligro</span><span>${fmt}</span></div>
+        <div class="info-value-bar-track">
+          <div class="info-value-bar-fill" style="width:${imcPct}%;background:${imcColors[lbl]||'#888'}"></div>
+        </div>
+      </div>`;
+    const imcDesc = {
+      "Muy Alto": "Este territorio tiene <strong>exposición crítica</strong> a múltiples peligros climáticos simultáneos. Se recomienda planificación urgente de adaptación.",
+      "Alto":     "Alta concurrencia de amenazas climáticas. Requiere <strong>medidas de adaptación</strong> en los sectores más vulnerables.",
+      "Medio":    "Exposición <strong>moderada</strong> a peligros climáticos. Monitoreo continuo y planificación preventiva recomendados.",
+      "Bajo":     "Baja exposición relativa a peligros climáticos en comparación con otras zonas del país.",
+    };
+    interpretHtml = `<div class="info-interpret">${imcDesc[lbl] || ""}</div>`;
   } else {
     const varNames = { pr: "Precipitación", tasmax: "T° Máxima", tasmin: "T° Mínima" };
     const unit = variable === "pr" ? "%" : "°C";
-    const fmt  = valor != null ? `${parseFloat(valor).toFixed(1)} ${unit}` : "Sin dato";
-    rows.push({ k: "Variable",   v: varNames[variable] || variable });
-    rows.push({ k: "Estación",   v: seasonLabel(state.estacion) });
-    rows.push({ k: "Período",    v: "2036–2065" });
-    rows.push({ k: "Valor",      v: fmt, highlight: true });
+    const fmt  = valor != null ? `${valor >= 0 && variable !== "pr" ? "+" : ""}${parseFloat(valor).toFixed(1)} ${unit}` : "Sin dato";
+    rows.push({ k: "Variable", v: varNames[variable] || variable });
+    rows.push({ k: "Estación", v: seasonLabel(state.estacion) });
+    rows.push({ k: "Período",  v: "2036–2065 vs 1981–2010" });
+    rows.push({ k: "Cambio",   v: fmt, highlight: true });
+
+    const bar = climateBarConfig(variable, valor);
+    if (bar) {
+      barHtml = `
+        <div class="info-value-bar-wrap">
+          <div class="info-value-bar-label">
+            <span>${bar.minLabel}</span>
+            <span>${bar.midLabel}</span>
+            <span>${bar.maxLabel}</span>
+          </div>
+          <div class="info-value-bar-track">
+            <div class="info-value-bar-fill" style="width:${bar.pct}%;background:${bar.color}"></div>
+          </div>
+        </div>`;
+    }
+    const interp = climateInterpret(variable, valor);
+    if (interp) interpretHtml = `<div class="info-interpret">${interp.text}</div>`;
   }
 
-  body.innerHTML = rows.map(r =>
-    `<div class="info-row">
-      <span class="info-key">${r.k}</span>
-      <span class="info-val${r.highlight ? " highlight" : ""}">${r.v}</span>
-    </div>`
-  ).join("");
+  body.innerHTML =
+    rows.map(r =>
+      `<div class="info-row">
+        <span class="info-key">${r.k}</span>
+        <span class="info-val${r.highlight ? " highlight" : ""}">${r.v}</span>
+      </div>`
+    ).join("") + barHtml + interpretHtml;
 
   // Posicionar el panel debajo del buscador flotante
   const floatBox = document.getElementById("mapSearchFloat");
   if (floatBox) {
-    const floatRect    = floatBox.getBoundingClientRect();
+    const floatRect     = floatBox.getBoundingClientRect();
     const containerRect = document.querySelector(".map-container").getBoundingClientRect();
-    const topOffset    = floatRect.bottom - containerRect.top + 10;
-    panel.style.top    = topOffset + "px";
+    const topOffset     = floatRect.bottom - containerRect.top + 10;
+    panel.style.top     = topOffset + "px";
   }
   panel.style.display = "block";
 }
@@ -494,6 +598,7 @@ placeInput.addEventListener("input", () => {
           placeClearBtn.style.display = "block";
           hideSuggestions();
           placeSearchMarker(lat, lon, name);
+          highlightDistrictAt(lat, lon);
         });
       });
     } catch {
@@ -532,6 +637,84 @@ document.getElementById("btnBuscar").addEventListener("click", () => {
   }
   placeSearchMarker(lat, lon);
 });
+
+// ─── Botones de información de variable (?) ───────────────
+let activeVarTooltip = null;
+
+function removeVarTooltip() {
+  if (activeVarTooltip) { activeVarTooltip.remove(); activeVarTooltip = null; }
+}
+
+document.querySelectorAll(".var-info-btn").forEach(btn => {
+  btn.addEventListener("click", e => {
+    e.stopPropagation();
+    e.preventDefault();
+    const varKey = btn.dataset.var;
+    const info   = VAR_INFO[varKey];
+    if (!info) return;
+
+    if (activeVarTooltip) { removeVarTooltip(); return; }
+
+    const tip = document.createElement("div");
+    tip.className = "var-tooltip";
+    tip.innerHTML = `
+      <div class="var-tooltip-title">${info.title}</div>
+      <div>${info.desc}</div>
+      <div class="var-tooltip-sector">
+        ${info.sectores.map(s => `<span class="var-tooltip-tag">${s}</span>`).join("")}
+      </div>`;
+
+    document.body.appendChild(tip);
+    activeVarTooltip = tip;
+
+    const rect = btn.getBoundingClientRect();
+    const tipW = 240;
+    let left = rect.right + 8;
+    if (left + tipW > window.innerWidth - 10) left = rect.left - tipW - 8;
+    tip.style.left = `${left}px`;
+    tip.style.top  = `${rect.top}px`;
+  });
+});
+
+document.addEventListener("click", e => {
+  if (!e.target.closest(".var-info-btn")) removeVarTooltip();
+});
+
+// ─── Resaltar distrito desde buscador (mejora 7) ──────────
+function highlightDistrictAt(lat, lon) {
+  const activeLayer = state.imcActive ? imcLayer : climateLayer;
+  if (!activeLayer) return;
+
+  let closest = null;
+  let closestDist = Infinity;
+
+  activeLayer.eachLayer(layer => {
+    if (!layer.feature || !layer.feature.geometry) return;
+    try {
+      const bounds = layer.getBounds();
+      if (bounds.contains([lat, lon])) {
+        closest = layer;
+        closestDist = 0;
+        return;
+      }
+      const center = bounds.getCenter();
+      const d = Math.hypot(center.lat - lat, center.lng - lon);
+      if (d < closestDist) { closestDist = d; closest = layer; }
+    } catch (_) {}
+  });
+
+  if (!closest) return;
+
+  // Reset estilo anterior
+  if (selectedFeature) {
+    (state.imcActive ? imcLayer : climateLayer)?.resetStyle(selectedFeature);
+  }
+  selectedFeature = closest;
+  closest.setStyle({ weight: 2.5, color: "#f7b731", fillOpacity: 0.97, dashArray: null });
+  closest.bringToFront();
+  if (refGeoLayer) refGeoLayer.bringToFront();
+  showInfoPanel(closest.feature.properties, state.variable, state.imcActive);
+}
 
 // ─── Carga inicial ────────────────────────────────────────
 loadClimateLayer();
